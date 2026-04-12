@@ -9,26 +9,23 @@ export type Post = {
 export const posts: Post[] = [
   {
     id: 1,
-    title: "React 19 New Features Overview",
-    content:
-      "A quick summary of what's new in React 19, including improved actions, form handling, and streaming updates.",
-    author: "Kim Coding",
-    date: "2026-03-30",
+    title: "첫 번째 게시글",
+    content: "안녕하세요. 내 블로그의 첫 게시글입니다.",
+    author: "관리자",
+    date: "2026-04-10",
   },
   {
     id: 2,
-    title: "Tailwind CSS 4 Migration Notes",
-    content:
-      "This post covers practical migration tips, common pitfalls, and how to keep utility classes maintainable in larger projects.",
-    author: "Lee Design",
-    date: "2026-03-28",
+    title: "두 번째 게시글",
+    content: "Next.js App Router를 사용해 페이지를 구성하는 방법을 정리했습니다.",
+    author: "관리자",
+    date: "2026-04-11",
   },
   {
     id: 3,
-    title: "Next.js 16 App Router Guide",
-    content:
-      "Learn the App Router fundamentals, dynamic routes, and why awaiting params matters in the latest Next.js version.",
-    author: "Park Dev",
-    date: "2026-03-25",
+    title: "세 번째 게시글",
+    content: "Tailwind CSS 4로 간단한 블로그 스타일을 적용했습니다.",
+    author: "관리자",
+    date: "2026-04-12",
   },
 ];
