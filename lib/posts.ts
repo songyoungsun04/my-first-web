@@ -6,6 +6,13 @@ export type Post = {
   date: string;
 };
 
+type JsonPlaceholderPost = {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+};
+
 export const posts: Post[] = [
   {
     id: 1,
@@ -29,3 +36,47 @@ export const posts: Post[] = [
     date: "2026-04-12",
   },
 ];
+
+function toPost(source: JsonPlaceholderPost): Post {
+  return {
+    id: source.id,
+    title: source.title,
+    content: source.body,
+    author: `사용자 ${source.userId}`,
+    date: "2026-04-13",
+  };
+}
+
+export async function getPosts(): Promise<Post[]> {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=10", {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("게시글 목록을 불러오지 못했습니다.");
+    }
+
+    const data = (await response.json()) as JsonPlaceholderPost[];
+    return data.map(toPost);
+  } catch {
+    return posts;
+  }
+}
+
+export async function getPostById(id: number): Promise<Post | undefined> {
+  try {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return posts.find((item) => item.id === id);
+    }
+
+    const data = (await response.json()) as JsonPlaceholderPost;
+    return toPost(data);
+  } catch {
+    return posts.find((item) => item.id === id);
+  }
+}

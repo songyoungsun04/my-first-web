@@ -1,15 +1,30 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+
+type PostForm = {
+  title: string;
+  content: string;
+};
 
 export default function NewPostPage() {
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [form, setForm] = useState<PostForm>({ title: "", content: "" });
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!form.title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+
     alert("저장되었습니다");
     router.push("/posts");
   };
@@ -26,11 +41,11 @@ export default function NewPostPage() {
           <input
             id="title"
             type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            name="title"
+            value={form.title}
+            onChange={handleChange}
             placeholder="제목을 입력하세요"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500"
-            required
           />
         </div>
 
@@ -40,12 +55,12 @@ export default function NewPostPage() {
           </label>
           <textarea
             id="content"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
+            name="content"
+            value={form.content}
+            onChange={handleChange}
             placeholder="내용을 입력하세요"
             rows={8}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500"
-            required
           />
         </div>
 

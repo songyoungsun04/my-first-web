@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { posts } from "@/lib/posts";
+import { getPostById } from "@/lib/posts";
 
 type PostDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -9,7 +9,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
   const { id } = await params;
   const postId = Number(id);
 
-  const post = posts.find((item) => item.id === postId);
+  const post = await getPostById(postId);
 
   if (!post) {
     return (
