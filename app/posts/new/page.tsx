@@ -2,6 +2,8 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type PostForm = {
   title: string;
@@ -30,27 +32,26 @@ export default function NewPostPage() {
   };
 
   return (
-    <section className="mx-auto max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-bold text-gray-900">새 게시글 작성</h1>
+    <section className="mx-auto max-w-2xl rounded-xl border border-border bg-card p-6 shadow-sm">
+      <h1 className="text-2xl font-bold text-foreground">새 게시글 작성</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div className="space-y-2">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="title" className="block text-sm font-medium text-foreground">
             제목
           </label>
-          <input
+          <Input
             id="title"
             type="text"
             name="title"
             value={form.title}
             onChange={handleChange}
             placeholder="제목을 입력하세요"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="content" className="block text-sm font-medium text-foreground">
             내용
           </label>
           <textarea
@@ -60,16 +61,13 @@ export default function NewPostPage() {
             onChange={handleChange}
             placeholder="내용을 입력하세요"
             rows={8}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500"
+            className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </div>
 
-        <button
-          type="submit"
-          className="inline-flex items-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-700"
-        >
+        <Button type="submit">
           저장하기
-        </button>
+        </Button>
       </form>
     </section>
   );

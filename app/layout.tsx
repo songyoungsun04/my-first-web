@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -18,36 +19,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={cn("font-sans", geist.variable)}>
-      <body className="min-h-screen flex flex-col">
-        <nav className="bg-gray-800 text-white">
+      <body className="min-h-screen bg-background text-foreground flex flex-col">
+        <nav className="border-b border-border bg-background">
           <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-            <Link href="/" className="text-lg font-semibold hover:text-gray-200">
+            <Link href="/" className="text-lg font-semibold text-foreground transition-colors hover:text-foreground/80">
               내 블로그
             </Link>
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 transition-colors hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                홈
-              </Link>
-              <Link
-                href="/posts"
-                className="rounded-md px-3 py-2 transition-colors hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                블로그
-              </Link>
-              <Link
-                href="/posts/new"
-                className="rounded-md px-3 py-2 transition-colors hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                새 글 쓰기
-              </Link>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/">홈</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/posts">블로그</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link href="/posts/new">새 글 쓰기</Link>
+              </Button>
             </div>
           </div>
         </nav>
         <main className="max-w-4xl mx-auto p-6">{children}</main>
-        <footer className="text-center text-gray-500 py-4">© 2026 내 블로그</footer>
+        <footer className="border-t border-border py-4 text-center text-sm text-muted-foreground">
+          © 2026 내 블로그
+        </footer>
       </body>
     </html>
   );

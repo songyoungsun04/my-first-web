@@ -4,6 +4,24 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Post } from "@/lib/posts";
 import SearchBar from "@/components/SearchBar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type PostsListClientProps = {
   initialPosts: Post[];
@@ -12,6 +30,7 @@ type PostsListClientProps = {
 export default function PostsListClient({ initialPosts }: PostsListClientProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [query, setQuery] = useState("");
+  const [pendingDelete, setPendingDelete] = useState<Post | null>(null);
 
   const filteredPosts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -27,53 +46,89 @@ export default function PostsListClient({ initialPosts }: PostsListClientProps) 
     });
   }, [posts, query]);
 
-  const handleDelete = (postId: number) => {
-    const confirmed = window.confirm("이 게시글을 삭제할까요?");
+  const handleOpenDelete = (post: Post) => {
+    setPendingDelete(post);
+  };
 
-    if (!confirmed) {
+  const handleConfirmDelete = () => {
+    if (!pendingDelete) {
       return;
     }
 
-    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== pendingDelete.id));
+    setPendingDelete(null);
+  };
+
+  const handleDialogChange = (open: boolean) => {
+    if (!open) {
+      setPendingDelete(null);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold text-gray-900">게시글 목록</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground">게시글 목록</h1>
+          <p className="text-sm text-muted-foreground">
             검색 결과 {filteredPosts.length}개 / 전체 {posts.length}개
           </p>
         </div>
         <SearchBar onSearch={setQuery} />
       </div>
 
+      <Dialog open={Boolean(pendingDelete)} onOpenChange={handleDialogChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>게시글 삭제</DialogTitle>
+            <DialogDescription>
+              {pendingDelete
+                ? `"${pendingDelete.title}" 게시글을 삭제하면 복구할 수 없습니다.`
+                : "삭제할 게시글을 선택해주세요."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">취소</Button>
+            </DialogClose>
+            <Button variant="destructive" onClick={handleConfirmDelete}>
+              삭제
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {filteredPosts.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-gray-300 bg-white p-6 text-sm text-gray-600">
-          검색 결과가 없습니다.
-        </p>
+        <Card className="items-center justify-center border-dashed text-center">
+          <CardContent className="py-6 text-sm text-muted-foreground">
+            검색 결과가 없습니다.
+          </CardContent>
+        </Card>
       ) : (
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {filteredPosts.map((post) => (
-            <li key={post.id} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="text-lg font-semibold text-gray-900">{post.title}</h2>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(post.id)}
-                  className="shrink-0 rounded-md border border-red-200 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50"
-                >
-                  삭제
-                </button>
-              </div>
-              <p className="mt-2 text-sm leading-6 text-gray-600">{post.content}</p>
-              <p className="mt-4 text-xs text-gray-500">
-                {post.author} · {post.date}
-              </p>
-              <Link href={`/posts/${post.id}`} className="mt-4 inline-block text-sm font-medium text-blue-600 hover:underline">
-                상세 보기
-              </Link>
+            <li key={post.id}>
+              <Card className="h-full shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg">{post.title}</CardTitle>
+                  <CardAction>
+                    <Button variant="destructive" size="sm" onClick={() => handleOpenDelete(post)}>
+                      삭제
+                    </Button>
+                  </CardAction>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm leading-6 text-foreground">{post.content}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {post.author} · {post.date}
+                  </p>
+                </CardContent>
+                <CardFooter className="justify-end">
+                  <Button variant="link" asChild className="px-0">
+                    <Link href={`/posts/${post.id}`}>상세 보기</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
             </li>
           ))}
         </ul>
