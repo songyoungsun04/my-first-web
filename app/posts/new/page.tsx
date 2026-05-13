@@ -1,9 +1,11 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
 
 type PostForm = {
   title: string;
@@ -12,7 +14,31 @@ type PostForm = {
 
 export default function NewPostPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [form, setForm] = useState<PostForm>({ title: "", content: "" });
+
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-2xl rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h1 className="text-2xl font-bold text-foreground">새 게시글 작성</h1>
+        <p className="mt-4 text-sm text-muted-foreground">로그인 상태를 확인하고 있습니다.</p>
+      </section>
+    );
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-2xl rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h1 className="text-2xl font-bold text-foreground">로그인이 필요합니다</h1>
+        <p className="mt-4 text-sm text-muted-foreground">
+          글을 작성하려면 먼저 로그인해주세요.
+        </p>
+        <Button className="mt-6" asChild>
+          <Link href="/login">로그인하기</Link>
+        </Button>
+      </section>
+    );
+  }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;

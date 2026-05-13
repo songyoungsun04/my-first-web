@@ -4,7 +4,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import AuthProvider from "@/components/AuthProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 import AuthNav from "@/components/AuthNav";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -38,9 +38,6 @@ export default function RootLayout({
                   </Button>
                   <Button variant="ghost" size="sm" asChild>
                     <Link href="/posts">블로그</Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href="/posts/new">새 글 쓰기</Link>
                   </Button>
                 </div>
                 <AuthNav />

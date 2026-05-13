@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 type LoginForm = {
   email: string;
@@ -22,22 +22,26 @@ type LoginForm = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { signInWithEmail } = useAuth();
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setIsSubmitting(true);
 
-    const result = login(form.email, form.password);
+    const { error: authError } = await signInWithEmail(form.email, form.password);
 
-    if (!result.ok) {
-      setError(result.message ?? "로그인에 실패했습니다.");
+    if (authError) {
+      setError(authError.message ?? "로그인에 실패했습니다.");
+      setIsSubmitting(false);
       return;
     }
 
     router.push("/posts");
+    setIsSubmitting(false);
   };
 
   return (
@@ -47,9 +51,6 @@ export default function LoginPage() {
           <CardTitle>로그인</CardTitle>
           <CardDescription>
             계정을 입력해 계속 진행하세요.
-            <span className="mt-2 block text-xs">
-              이 로그인은 화면 내 데모로, 새로고침하면 초기화됩니다.
-            </span>
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit} className="space-y-0">
@@ -87,7 +88,7 @@ export default function LoginPage() {
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
           </CardContent>
           <CardFooter className="flex flex-col gap-2 px-6">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               로그인
             </Button>
             <Button variant="link" asChild className="h-auto p-0 text-sm">

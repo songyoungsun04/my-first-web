@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 type SignupForm = {
   name: string;
@@ -23,26 +23,34 @@ type SignupForm = {
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signup } = useAuth();
+  const { signUpWithEmail } = useAuth();
   const [form, setForm] = useState<SignupForm>({
     name: "",
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setIsSubmitting(true);
 
-    const result = signup(form.name, form.email, form.password);
+    const { error: authError } = await signUpWithEmail(
+      form.email,
+      form.password,
+      form.name
+    );
 
-    if (!result.ok) {
-      setError(result.message ?? "회원가입에 실패했습니다.");
+    if (authError) {
+      setError(authError.message ?? "회원가입에 실패했습니다.");
+      setIsSubmitting(false);
       return;
     }
 
-    router.push("/posts");
+    router.push("/login");
+    setIsSubmitting(false);
   };
 
   return (
@@ -52,9 +60,6 @@ export default function SignupPage() {
           <CardTitle>회원가입</CardTitle>
           <CardDescription>
             간단한 정보만 입력하면 바로 시작할 수 있어요.
-            <span className="mt-2 block text-xs">
-              이 회원가입은 화면 내 데모로, 새로고침하면 초기화됩니다.
-            </span>
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit} className="space-y-0">
@@ -107,7 +112,7 @@ export default function SignupPage() {
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
           </CardContent>
           <CardFooter className="flex flex-col gap-2 px-6">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               회원가입
             </Button>
             <Button variant="link" asChild className="h-auto p-0 text-sm">
