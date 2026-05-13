@@ -33,3 +33,16 @@
 - Do not use `next/router`; use `next/navigation` when navigation is needed.
 - Do not create `pages/` router files; this project uses the App Router.
 - Do not add `"use client"` unless interactivity or browser APIs are actually needed.
+
+## Ch9 Auth Rules
+
+- Email/password only; do not add social login.
+- Use `signInWithPassword`, `signUp`, `signOut`.
+- Do not use legacy `auth.signIn()`.
+- Use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` only.
+- Never use service_role or other secret keys in client or middleware.
+
+## Version Policy
+
+- Course baseline: Next.js 16.2.1, `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2.
+- `package.json` may be newer; keep prompts/docs on the baseline and debug build issues against installed versions.

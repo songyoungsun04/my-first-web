@@ -2,10 +2,11 @@
 
 ## 현재 상태
 
-- 마지막 작업일: 2026-04-29
+- 마지막 작업일: 2026-05-13
 - 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 목록, 데이터베이스 스키마 초안
 - 진행 중: 포스트 상세 페이지 (UI 완료, 데이터 연결 미완)
 - 미착수: 마이페이지
+- Ch9 예정: 이메일/비밀번호 인증, /posts/new 보호 라우트
 
 ## 변경 파일
 
@@ -15,9 +16,17 @@
 
 ## 기술 결정 사항
 
-- 인증: Supabase Auth (Email)
+- 인증: Supabase Auth 이메일/비밀번호 (signInWithPassword, signUp, signOut)
+- 세션 처리: App Router + `@supabase/ssr`
+- 환경변수: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
 - 상태관리: React Context (AuthProvider)
 - 이미지: Supabase Storage 사용 예정
+
+## 버전 정책
+
+- 교재 기준: Next.js 16.2.1, `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2
+- 실제 `package.json`이 더 최신일 수 있음
+- 수업 프롬프트와 설명은 교재 기준으로 통일
 
 ## 해결된 이슈
 
