@@ -15,13 +15,13 @@
 - [x] 포스트 목록 페이지
 - [x] 포스트 상세 페이지
 - [ ] 포스트 작성 (CRUD)
-- [ ] 회원가입
-- [ ] 로그인
-- [ ] 로그아웃
-- [ ] Header 로그인 상태 분기
-- [ ] /posts/new 보호 (middleware)
-- [ ] npm run build 검증
-- [ ] Vercel 배포 URL 검증
+- [x] 회원가입
+- [x] 로그인
+- [x] 로그아웃
+- [x] Header 로그인 상태 분기
+- [x] /posts/new 보호 (middleware)
+- [x] npm run build 검증
+- [x] Vercel 배포 URL 검증
 
 ## 3단계: 고급 기능 (Ch11~12)
 
