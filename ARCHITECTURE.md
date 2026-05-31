@@ -18,6 +18,13 @@ App Router 기준 경로 구조.
 - /posts/new
 - /mypage (및 하위 경로)
 
+### 2.2 공개 라우트
+- /
+- /posts
+- /posts/[id]
+- /login
+- /signup
+
 ## 3. 유저 플로우
 ### 3.1 글 읽기
 1) 홈에서 글 목록 확인
@@ -59,7 +66,14 @@ App Router 기준 경로 구조.
 - App Router 기준 페이지: app/, app/posts/, app/posts/[id], app/posts/new
 - Auth 전역 상태: contexts/AuthContext.tsx (useAuth/AuthProvider)
 - 헤더 인증 분기: components/AuthNav.tsx
-- 데이터 접근: lib/supabase/client.ts, lib/posts.ts (Ch10에서 Supabase로 교체)
+- 게시글 폼: components/PostForm.tsx (작성/수정 공용)
+- 목록 UX: components/PostsListClient.tsx (검색/삭제)
+- 데이터 접근: lib/supabase/client.ts, lib/posts.ts
+
+### 5.1 posts 페이지 구조
+- app/posts/page.tsx: 목록 조회 및 링크 렌더링
+- app/posts/[id]/page.tsx: 상세 조회 + 수정/삭제 UI
+- app/posts/new/page.tsx: 작성 폼
 
 ## 6. 데이터 모델
 

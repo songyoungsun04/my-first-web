@@ -3,8 +3,8 @@
 ## 현재 상태
 
 - 마지막 작업일: 2026-05-31
-- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 목록/상세 UI, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트
-- 진행 중: 포스트 CRUD (Supabase 연동), 포스트 목록/상세 데이터 연결
+- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 CRUD (Supabase 연동), 포스트 목록/상세/작성/수정/삭제 연결, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트
+- 진행 중: 없음
 - 미착수: 마이페이지
 - 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인
 
@@ -14,7 +14,13 @@
 - lib/auth.ts, app/login/page.tsx, app/signup/page.tsx: 로그인/회원가입 기능 추가
 - contexts/AuthContext.tsx, components/AuthNav.tsx: 전역 상태 추가 및 헤더 연동
 - middleware.ts: /posts/new 보호 라우트 설정
-- lib/posts.ts: 현재 더미/JSONPlaceholder 기반 (Ch10에서 Supabase로 교체 예정)
+- lib/supabase/client.ts: createClient 추가 및 브라우저 클라이언트 정비
+- lib/posts.ts: Supabase CRUD(select/insert/update/delete) 정리
+- app/posts/page.tsx: 게시글 목록 조회 및 렌더링
+- app/posts/[id]/page.tsx: 게시글 상세 조회, 수정/삭제 UI
+- app/posts/new/page.tsx: 게시글 작성
+- components/PostForm.tsx: 작성/수정 공용 폼
+- components/PostsListClient.tsx: 목록 검색/삭제 UX
 - docs/supabase-schema.sql: Supabase용 스키마 SQL 추가
 - todo.md: 진행률 반영
 
@@ -29,6 +35,8 @@
 - 보호 라우트: middleware.ts 기반 (/posts/new 접근 차단)
 - Supabase 대시보드: Authentication -> Providers -> Email 및 URL Configuration 확인
 - 이미지: Supabase Storage 사용 예정
+- Supabase 쿼리 패턴: select, insert, update, delete (lib/posts.ts)
+- 작성자 UI 분기: user.id === post.user_id
 - posts 컬럼명(Ch8 고정): id, user_id, title, content, created_at
 - profiles 컬럼명(Ch8 고정): id, username, avatar_url, role
 - 수정/삭제 UI는 UX 목적, 실제 보안은 Ch11 RLS에서 처리

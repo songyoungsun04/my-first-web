@@ -47,6 +47,7 @@
 - Use `lib/supabase/client.ts` for the Supabase browser client.
 - Use `useAuth` / `AuthProvider` from `contexts/AuthContext.tsx` for auth state.
 - Posts columns follow Ch8 schema: `id`, `user_id`, `title`, `content`, `created_at`.
+- Do not rename or replace the posts column names.
 - Profiles columns follow Ch8 schema: `id`, `username`, `avatar_url`, `role`.
 - App Router only; never use `next/router` or the pages router.
 - Edit/Delete UI is UX only; enforce access with Ch11 RLS.
