@@ -2,10 +2,11 @@
 
 ## 현재 상태
 
-- 마지막 작업일: 2026-05-13
-- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 목록, 데이터베이스 스키마 초안, 이메일/비밀번호 인증, /posts/new 보호 라우트
-- 진행 중: 포스트 상세 페이지 (UI 완료, 데이터 연결 미완)
+- 마지막 작업일: 2026-05-31
+- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 목록/상세 UI, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트
+- 진행 중: 포스트 CRUD (Supabase 연동), 포스트 목록/상세 데이터 연결
 - 미착수: 마이페이지
+- 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인
 
 ## 변경 파일
 
@@ -13,6 +14,7 @@
 - lib/auth.ts, app/login/page.tsx, app/signup/page.tsx: 로그인/회원가입 기능 추가
 - contexts/AuthContext.tsx, components/AuthNav.tsx: 전역 상태 추가 및 헤더 연동
 - middleware.ts: /posts/new 보호 라우트 설정
+- lib/posts.ts: 현재 더미/JSONPlaceholder 기반 (Ch10에서 Supabase로 교체 예정)
 - docs/supabase-schema.sql: Supabase용 스키마 SQL 추가
 - todo.md: 진행률 반영
 
@@ -21,16 +23,21 @@
 - 인증: Supabase Auth 이메일/비밀번호 (signInWithPassword, signUp, signOut)
 - 세션 처리: App Router + `@supabase/ssr`
 - 환경변수: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY (Ch8 연결 재확인)
+- Supabase 클라이언트: `lib/supabase/client.ts` 사용
+- 전역 인증 상태: useAuth/AuthProvider 사용
 - 상태관리: React Context (AuthProvider)
 - 보호 라우트: middleware.ts 기반 (/posts/new 접근 차단)
 - Supabase 대시보드: Authentication -> Providers -> Email 및 URL Configuration 확인
 - 이미지: Supabase Storage 사용 예정
+- posts 컬럼명(Ch8 고정): id, user_id, title, content, created_at
+- profiles 컬럼명(Ch8 고정): id, username, avatar_url, role
+- 수정/삭제 UI는 UX 목적, 실제 보안은 Ch11 RLS에서 처리
 
 ## 버전 정책
 
 - 교재 기준: Next.js 16.2.1, `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2
-- 실제 `package.json`이 더 최신일 수 있음
-- 수업 프롬프트와 설명은 교재 기준으로 통일
+- 현재 설치 기준: Next.js 16.2.1, `@supabase/supabase-js` 2.105.3, `@supabase/ssr` 0.10.2
+- 수업 프롬프트와 설명은 교재 기준으로 통일 (빌드 이슈는 설치 기준 확인)
 
 ## 해결된 이슈
 

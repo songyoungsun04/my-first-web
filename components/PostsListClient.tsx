@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Post } from "@/lib/posts";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
@@ -22,15 +22,51 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { deletePost, getPosts } from "@/lib/posts";
+import { useAuth } from "@/contexts/AuthContext";
 
 type PostsListClientProps = {
-  initialPosts: Post[];
+  initialPosts?: Post[];
 };
 
-export default function PostsListClient({ initialPosts }: PostsListClientProps) {
+export default function PostsListClient({ initialPosts = [] }: PostsListClientProps) {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [query, setQuery] = useState("");
   const [pendingDelete, setPendingDelete] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadPosts = async () => {
+      setLoading(true);
+      setError(null);
+
+      const { data, error: loadError } = await getPosts();
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (loadError) {
+        setError(loadError);
+        setPosts([]);
+      } else {
+        setPosts(data ?? []);
+      }
+
+      setLoading(false);
+    };
+
+    loadPosts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const filteredPosts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -50,19 +86,45 @@ export default function PostsListClient({ initialPosts }: PostsListClientProps) 
     setPendingDelete(post);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!pendingDelete) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setError(null);
+
+    const { error: deleteError } = await deletePost(pendingDelete.id);
+
+    if (deleteError) {
+      setError(deleteError);
+      setIsDeleting(false);
+      setPendingDelete(null);
       return;
     }
 
     setPosts((prevPosts) => prevPosts.filter((post) => post.id !== pendingDelete.id));
     setPendingDelete(null);
+    setIsDeleting(false);
   };
 
   const handleDialogChange = (open: boolean) => {
     if (!open) {
       setPendingDelete(null);
     }
+  };
+
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("ko-KR");
+  };
+
+  const getAuthorLabel = (userId: string) => {
+    if (!userId) {
+      return "알 수 없음";
+    }
+
+    return `${userId.slice(0, 8)}...`;
   };
 
   return (
@@ -75,6 +137,7 @@ export default function PostsListClient({ initialPosts }: PostsListClientProps) 
           </p>
         </div>
         <SearchBar onSearch={setQuery} />
+        {error ? <p className="text-sm text-destructive">{error}</p> : null}
       </div>
 
       <Dialog open={Boolean(pendingDelete)} onOpenChange={handleDialogChange}>
@@ -91,14 +154,20 @@ export default function PostsListClient({ initialPosts }: PostsListClientProps) 
             <DialogClose asChild>
               <Button variant="outline">취소</Button>
             </DialogClose>
-            <Button variant="destructive" onClick={handleConfirmDelete}>
+            <Button variant="destructive" onClick={handleConfirmDelete} disabled={isDeleting}>
               삭제
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {filteredPosts.length === 0 ? (
+      {loading ? (
+        <Card className="items-center justify-center border-dashed text-center">
+          <CardContent className="py-6 text-sm text-muted-foreground">
+            게시글을 불러오는 중입니다.
+          </CardContent>
+        </Card>
+      ) : filteredPosts.length === 0 ? (
         <Card className="items-center justify-center border-dashed text-center">
           <CardContent className="py-6 text-sm text-muted-foreground">
             검색 결과가 없습니다.
@@ -112,15 +181,21 @@ export default function PostsListClient({ initialPosts }: PostsListClientProps) 
                 <CardHeader>
                   <CardTitle className="text-lg">{post.title}</CardTitle>
                   <CardAction>
-                    <Button variant="destructive" size="sm" onClick={() => handleOpenDelete(post)}>
-                      삭제
-                    </Button>
+                    {user?.id === post.user_id ? (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleOpenDelete(post)}
+                      >
+                        삭제
+                      </Button>
+                    ) : null}
                   </CardAction>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm leading-6 text-foreground">{post.content}</p>
                   <p className="text-xs text-muted-foreground">
-                    {post.author} · {post.date}
+                    {getAuthorLabel(post.user_id)} · {formatDate(post.created_at)}
                   </p>
                 </CardContent>
                 <CardFooter className="justify-end">

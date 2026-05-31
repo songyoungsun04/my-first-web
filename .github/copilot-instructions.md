@@ -42,7 +42,17 @@
 - Use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` only.
 - Never use service_role or other secret keys in client or middleware.
 
+## Ch10 Posts Rules
+
+- Use `lib/supabase/client.ts` for the Supabase browser client.
+- Use `useAuth` / `AuthProvider` from `contexts/AuthContext.tsx` for auth state.
+- Posts columns follow Ch8 schema: `id`, `user_id`, `title`, `content`, `created_at`.
+- Profiles columns follow Ch8 schema: `id`, `username`, `avatar_url`, `role`.
+- App Router only; never use `next/router` or the pages router.
+- Edit/Delete UI is UX only; enforce access with Ch11 RLS.
+
 ## Version Policy
 
 - Course baseline: Next.js 16.2.1, `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2.
-- `package.json` may be newer; keep prompts/docs on the baseline and debug build issues against installed versions.
+- Installed versions (package.json): Next.js 16.2.1, `@supabase/supabase-js` 2.105.3, `@supabase/ssr` 0.10.2.
+- Keep prompts/docs on the baseline; debug build issues against installed versions.

@@ -43,12 +43,35 @@ App Router 기준 경로 구조.
 2) /login에서 로그인
 3) 로그인 성공 후 /posts로 이동
 
+### 3.5 글 수정/삭제 (Ch10)
+1) 글 상세에서 수정/삭제 UI 노출
+2) 수정 시 기존 데이터 로드 후 저장
+3) 삭제 시 확인 후 목록으로 이동
+
+> 수정/삭제 UI는 UX 목적이며 실제 보안은 Ch11 RLS에서 처리한다.
+
 ## 4. 상단 내비게이션 상태
 - 비로그인: 로그인 / 회원가입
 - 로그인: 글쓰기 / 로그아웃
 
 ## 5. 컴포넌트 구조
-TODO: 추가 예정
+
+- App Router 기준 페이지: app/, app/posts/, app/posts/[id], app/posts/new
+- Auth 전역 상태: contexts/AuthContext.tsx (useAuth/AuthProvider)
+- 헤더 인증 분기: components/AuthNav.tsx
+- 데이터 접근: lib/supabase/client.ts, lib/posts.ts (Ch10에서 Supabase로 교체)
 
 ## 6. 데이터 모델
-TODO: 추가 예정
+
+### 6.1 profiles
+- id (uuid, PK, auth.users.id 참조)
+- username (text)
+- avatar_url (text)
+- role (text)
+
+### 6.2 posts
+- id (uuid, PK)
+- user_id (uuid, FK -> profiles.id)
+- title (text)
+- content (text)
+- created_at (timestamptz)
