@@ -31,9 +31,13 @@
 
 ## 3단계: 고급 기능 (Ch11~12)
 
-- [ ] RLS 마이그레이션 작성 (posts: select/insert/update/delete, user_id = auth.uid())
+- [x] posts RLS 마이그레이션 생성 (add_posts_rls_policies)
+- [x] RLS db push 적용
 - [ ] RLS 정책 적용 확인 (posts)
+- [ ] 다른 계정 우회 테스트 (브라우저)
+- [x] 보안 키 노출 grep (app/lib/components/contexts)
+- [x] 빌드/배포 검증 (npm run build, Vercel URL)
 - [ ] 마이페이지
 - [ ] 댓글 기능
 
-## 진행률: 20/25 (80%)
+## 진행률: 24/31 (77%)

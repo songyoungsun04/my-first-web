@@ -2,11 +2,11 @@
 
 ## 현재 상태
 
-- 마지막 작업일: 2026-05-31
-- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 CRUD (Supabase 연동), 포스트 목록/상세/작성/수정/삭제 연결, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트
-- 진행 중: Ch11 RLS 준비(문서/정책 기준 정비)
+- 마지막 작업일: 2026-06-01
+- 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 CRUD (Supabase 연동), 포스트 목록/상세/작성/수정/삭제 연결, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트, posts RLS 활성화 및 정책 적용
+- 진행 중: Ch11 RLS 검증(브라우저 우회 테스트)
 - 미착수: 마이페이지
-- 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인, RLS 마이그레이션 적용 대상 확정(posts)
+- 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인, RLS 우회 테스트 결과 기록
 
 ## 변경 파일
 
@@ -22,6 +22,7 @@
 - components/PostForm.tsx: 작성/수정 공용 폼
 - components/PostsListClient.tsx: 목록 검색/삭제 UX
 - docs/supabase-schema.sql: Supabase용 스키마 SQL 추가
+- supabase/migrations/20260531150430_add_posts_rls_policies.sql: posts RLS 정책
 - todo.md: 진행률 반영
 
 ## 기술 결정 사항
@@ -41,9 +42,20 @@
 - profiles 컬럼명(Ch8 고정): id, username, avatar_url, role
 - RLS 정책은 Supabase CLI 마이그레이션(supabase/migrations)으로 관리 (SQL Editor 직접 실행 금지)
 - RLS 기준: posts.user_id = auth.uid()
+- posts RLS 활성화
 - RLS 적용 대상: posts
+- 적용 정책: SELECT 누구나, INSERT 로그인 본인, UPDATE 작성자, DELETE 작성자
+- 마이그레이션 파일: supabase/migrations/20260531150430_add_posts_rls_policies.sql
 - 클라이언트 UI 분기는 보안이 아니며 실제 보안은 Ch11 RLS에서 처리
 - service_role 키는 클라이언트/미들웨어에서 절대 사용하지 않음
+
+## 테스트 결과 (RLS)
+
+- 비로그인 조회: 미확인
+- 비로그인 작성: 미확인
+- 사용자 A 작성: 미확인
+- 사용자 B가 A 글 수정: 미확인
+- 사용자 B가 A 글 삭제: 미확인
 
 ## 버전 정책
 

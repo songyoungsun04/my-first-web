@@ -52,6 +52,12 @@
 - App Router only; never use `next/router` or the pages router.
 - Edit/Delete UI is UX only; enforce access with Ch11 RLS.
 
+## Ch11 RLS Rules
+
+- 보안은 클라이언트 if문이 아니라 RLS로 강제한다.
+- RLS SQL은 supabase/migrations 마이그레이션으로 남긴다.
+- service_role 키는 클라이언트/미들웨어에서 절대 사용하지 않는다.
+
 ## Version Policy
 
 - Course baseline: Next.js 16.2.1, `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2.
