@@ -31,6 +31,8 @@
 
 ## 3단계: 고급 기능 (Ch11~12)
 
+- [ ] RLS 마이그레이션 작성 (posts: select/insert/update/delete, user_id = auth.uid())
+- [ ] RLS 정책 적용 확인 (posts)
 - [ ] 마이페이지
 - [ ] 댓글 기능
 

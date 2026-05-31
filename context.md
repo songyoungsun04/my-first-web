@@ -4,9 +4,9 @@
 
 - 마지막 작업일: 2026-05-31
 - 완료된 작업: 홈 페이지, 헤더/푸터 레이아웃, 포스트 CRUD (Supabase 연동), 포스트 목록/상세/작성/수정/삭제 연결, 데이터베이스 스키마, 이메일/비밀번호 인증, AuthProvider 연동, /posts/new 보호 라우트
-- 진행 중: 없음
+- 진행 중: Ch11 RLS 준비(문서/정책 기준 정비)
 - 미착수: 마이페이지
-- 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인
+- 확인 필요: Supabase CLI 연결(projects list, api-keys), .env.local 환경변수 값 재확인, RLS 마이그레이션 적용 대상 확정(posts)
 
 ## 변경 파일
 
@@ -39,7 +39,11 @@
 - 작성자 UI 분기: user.id === post.user_id
 - posts 컬럼명(Ch8 고정): id, user_id, title, content, created_at
 - profiles 컬럼명(Ch8 고정): id, username, avatar_url, role
-- 수정/삭제 UI는 UX 목적, 실제 보안은 Ch11 RLS에서 처리
+- RLS 정책은 Supabase CLI 마이그레이션(supabase/migrations)으로 관리 (SQL Editor 직접 실행 금지)
+- RLS 기준: posts.user_id = auth.uid()
+- RLS 적용 대상: posts
+- 클라이언트 UI 분기는 보안이 아니며 실제 보안은 Ch11 RLS에서 처리
+- service_role 키는 클라이언트/미들웨어에서 절대 사용하지 않음
 
 ## 버전 정책
 

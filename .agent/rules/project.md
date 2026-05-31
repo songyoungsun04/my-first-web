@@ -10,6 +10,8 @@
 - Posts columns follow Ch8 schema: id, user_id, title, content, created_at.
 - Profiles columns follow Ch8 schema: id, username, avatar_url, role.
 - Edit/Delete UI is UX only; enforce access with Ch11 RLS.
+- RLS policies are managed via Supabase CLI migrations (not SQL Editor).
+- posts RLS policies use user_id = auth.uid().
 - Course baseline: Next.js 16.2.1, @supabase/supabase-js 2.47.12, @supabase/ssr 0.5.2.
 - Installed versions: Next.js 16.2.1, @supabase/supabase-js 2.105.3, @supabase/ssr 0.10.2.
 - Dashboard menu labels follow 2026-05 UI.

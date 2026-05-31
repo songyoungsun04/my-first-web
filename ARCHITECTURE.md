@@ -89,3 +89,9 @@ App Router 기준 경로 구조.
 - title (text)
 - content (text)
 - created_at (timestamptz)
+
+## 7. 보안/RLS (Ch11)
+- RLS 정책은 Supabase CLI 마이그레이션(supabase/migrations)으로 관리한다.
+- posts 정책 기준은 user_id = auth.uid() 이다.
+- 클라이언트 UI 분기는 보안이 아니며 실제 보안은 RLS가 담당한다.
+- service_role 키는 클라이언트/미들웨어에서 절대 사용하지 않는다.
