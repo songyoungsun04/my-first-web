@@ -37,7 +37,8 @@
 - [ ] 다른 계정 우회 테스트 (브라우저)
 - [x] 보안 키 노출 grep (app/lib/components/contexts)
 - [x] 빌드/배포 검증 (npm run build, Vercel URL)
+- [x] Ch12 에러 처리/UX 개선 (error boundary, loading/empty 상태, 폼 검증, 에러 메시지 변환)
 - [ ] 마이페이지
 - [ ] 댓글 기능
 
-## 진행률: 24/31 (77%)
+## 진행률: 25/32 (78%)

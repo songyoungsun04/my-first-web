@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
+import { getErrorMessage } from "@/lib/error-message";
 
 type SignupForm = {
   name: string;
@@ -44,7 +45,8 @@ export default function SignupPage() {
     );
 
     if (authError) {
-      setError(authError.message ?? "회원가입에 실패했습니다.");
+      console.error("Signup failed", authError);
+      setError(getErrorMessage(authError));
       setIsSubmitting(false);
       return;
     }

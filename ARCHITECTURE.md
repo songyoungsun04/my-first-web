@@ -69,6 +69,9 @@ App Router 기준 경로 구조.
 - 게시글 폼: components/PostForm.tsx (작성/수정 공용)
 - 목록 UX: components/PostsListClient.tsx (검색/삭제)
 - 데이터 접근: lib/supabase/client.ts, lib/posts.ts
+- 에러 메시지 변환: lib/error-message.ts
+- 글로벌 에러 바운더리: app/error.tsx
+- 로딩 UI: app/posts/loading.tsx, app/posts/[id]/loading.tsx
 
 ### 5.1 posts 페이지 구조
 - app/posts/page.tsx: 목록 조회 및 링크 렌더링
@@ -101,3 +104,33 @@ App Router 기준 경로 구조.
 	- INSERT: 로그인 사용자 본인 (WITH CHECK auth.uid() = user_id)
 	- UPDATE: 작성자만 (USING auth.uid() = user_id, WITH CHECK 동일)
 	- DELETE: 작성자만 (USING auth.uid() = user_id)
+
+## 8. 에러 처리 & UX (Ch12)
+
+### 8.1 화면별 loading/empty/error 상태
+- /posts (app/posts/page.tsx)
+	- loading: 목록 로딩 카드 + 안내 문구
+	- empty: 게시글 없음 안내 + 첫 글 쓰기 버튼
+	- error: 재시도 버튼 포함 에러 안내
+- /posts/[id] (app/posts/[id]/page.tsx)
+	- loading: 기본 텍스트 로딩 안내 (fallback)
+	- not found: notFound() 호출로 404 처리
+	- error: 상세 로딩 실패 시 메시지 표시
+- /posts (대체 UI)
+	- app/posts/loading.tsx: 목록 스켈레톤 로딩 UI
+- /posts/[id] (대체 UI)
+	- app/posts/[id]/loading.tsx: 상세 스켈레톤 로딩 UI
+- 전역
+	- app/error.tsx: 글로벌 에러 바운더리 + 재시도/홈 이동
+
+### 8.2 폼 검증 규칙 (PostForm)
+- 제목: 필수, 최소 2자
+- 내용: 필수, 최소 10자
+- 제출 중: 버튼/입력 비활성화 (중복 제출 방지)
+- 실패 시: 각 필드 아래 에러 메시지 표시
+
+### 8.3 에러 메시지 변환 규칙 (lib/error-message.ts)
+- code 42501 또는 "row-level security" 포함: "이 작업을 수행할 권한이 없습니다."
+- "Failed to fetch" 포함: "인터넷 연결을 확인해주세요."
+- "not found" 포함: "요청한 게시글을 찾을 수 없습니다."
+- 기본값: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."

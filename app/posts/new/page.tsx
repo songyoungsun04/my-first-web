@@ -41,22 +41,26 @@ export default function NewPostPage() {
     setIsSubmitting(true);
     setError(null);
 
-    const { data, error: createError } = await createPost(user.id, values);
+    try {
+      const { data, error: createError } = await createPost(user.id, values);
 
-    if (createError) {
-      console.error("Failed to create post", createError);
+      if (createError) {
+        console.error("Failed to create post", createError);
+        setError("게시글 작성에 실패했습니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      if (data) {
+        router.push(`/posts/${data.id}`);
+      } else {
+        router.push("/posts");
+      }
+    } catch (error) {
+      console.error("Failed to create post", error);
       setError("게시글 작성에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    if (data) {
-      router.push(`/posts/${data.id}`);
-    } else {
-      router.push("/posts");
-    }
-
-    setIsSubmitting(false);
   };
 
   return (

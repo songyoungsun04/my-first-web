@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
+import { getErrorMessage } from "@/lib/error-message";
 
 type LoginForm = {
   email: string;
@@ -35,7 +36,8 @@ export default function LoginPage() {
     const { error: authError } = await signInWithEmail(form.email, form.password);
 
     if (authError) {
-      setError(authError.message ?? "로그인에 실패했습니다.");
+      console.error("Login failed", authError);
+      setError(getErrorMessage(authError));
       setIsSubmitting(false);
       return;
     }
