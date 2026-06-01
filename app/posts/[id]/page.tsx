@@ -51,7 +51,8 @@ export default function PostDetailPage() {
       }
 
       if (loadError) {
-        setError(loadError);
+        console.error("Failed to load post", loadError);
+        setError("게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
         setPost(null);
       } else {
         setPost(data);
@@ -85,6 +86,7 @@ export default function PostDetailPage() {
     const { data, error: updateError } = await updatePost(post.id, values);
 
     if (updateError) {
+      console.error("Failed to update post", updateError);
       setError("게시글 수정에 실패했습니다. 잠시 후 다시 시도해주세요.");
       setIsSubmitting(false);
       return;
@@ -117,6 +119,7 @@ export default function PostDetailPage() {
     setIsSubmitting(false);
 
     if (deleteError) {
+      console.error("Failed to delete post", deleteError);
       setError("게시글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.");
       return;
     }

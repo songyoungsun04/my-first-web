@@ -17,6 +17,7 @@ export default function PostsPage() {
   const [posts, setPosts] = useState<PostRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const supabase = createClient();
@@ -36,7 +37,8 @@ export default function PostsPage() {
       }
 
       if (loadError) {
-        setError("게시글을 불러오지 못했습니다.");
+        console.error("Failed to load posts", loadError);
+        setError("게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
         setPosts([]);
       } else {
         setPosts(data ?? []);
@@ -50,7 +52,11 @@ export default function PostsPage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [reloadKey]);
+
+  const handleRetry = () => {
+    setReloadKey((prev) => prev + 1);
+  };
 
   return (
     <section className="space-y-6">
@@ -68,11 +74,33 @@ export default function PostsPage() {
       </header>
 
       {loading ? (
-        <p className="text-sm text-muted-foreground">로딩 중...</p>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-muted-foreground/60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-muted-foreground/60" />
+            </span>
+            <span>게시글을 불러오는 중입니다. 잠시만 기다려주세요.</span>
+          </div>
+        </div>
       ) : error ? (
-        <p className="text-sm text-destructive">{error}</p>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <p className="text-sm text-muted-foreground">{error}</p>
+          <div className="mt-3">
+            <Button variant="outline" size="sm" onClick={handleRetry}>
+              다시 시도
+            </Button>
+          </div>
+        </div>
       ) : posts.length === 0 ? (
-        <p className="text-sm text-muted-foreground">게시글이 없습니다.</p>
+        <div className="rounded-lg border border-dashed border-border bg-card p-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            아직 작성된 게시글이 없습니다. 첫 글을 작성해보세요.
+          </p>
+          <Button size="sm" className="mt-4" asChild>
+            <Link href="/posts/new">첫 글 쓰기</Link>
+          </Button>
+        </div>
       ) : (
         <ul className="space-y-4">
           {posts.map((post) => (

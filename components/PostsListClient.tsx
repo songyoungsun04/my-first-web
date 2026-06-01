@@ -37,6 +37,7 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,7 +53,8 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
       }
 
       if (loadError) {
-        setError(loadError);
+        console.error("Failed to load posts", loadError);
+        setError("게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
         setPosts([]);
       } else {
         setPosts(data ?? []);
@@ -66,7 +68,7 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [reloadKey]);
 
   const filteredPosts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -81,6 +83,9 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
       return title.includes(normalizedQuery) || content.includes(normalizedQuery);
     });
   }, [posts, query]);
+
+  const isSearchActive = query.trim().length > 0;
+  const isEmptyState = posts.length === 0 && !isSearchActive;
 
   const handleOpenDelete = (post: Post) => {
     setPendingDelete(post);
@@ -97,7 +102,8 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
     const { error: deleteError } = await deletePost(pendingDelete.id);
 
     if (deleteError) {
-      setError(deleteError);
+      console.error("Failed to delete post", deleteError);
+      setError("게시글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.");
       setIsDeleting(false);
       setPendingDelete(null);
       return;
@@ -137,7 +143,18 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
           </p>
         </div>
         <SearchBar onSearch={setQuery} />
-        {error ? <p className="text-sm text-destructive">{error}</p> : null}
+        {error ? (
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <span>{error}</span>
+            <Button
+              variant="outline"
+              size="xs"
+              onClick={() => setReloadKey((prev) => prev + 1)}
+            >
+              다시 시도
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       <Dialog open={Boolean(pendingDelete)} onOpenChange={handleDialogChange}>
@@ -165,6 +182,15 @@ export default function PostsListClient({ initialPosts = [] }: PostsListClientPr
         <Card className="items-center justify-center border-dashed text-center">
           <CardContent className="py-6 text-sm text-muted-foreground">
             게시글을 불러오는 중입니다.
+          </CardContent>
+        </Card>
+      ) : isEmptyState ? (
+        <Card className="items-center justify-center border-dashed text-center">
+          <CardContent className="space-y-3 py-6 text-sm text-muted-foreground">
+            <p>아직 작성된 게시글이 없습니다. 첫 글을 작성해보세요.</p>
+            <Button size="xs" asChild>
+              <Link href="/posts/new">첫 글 쓰기</Link>
+            </Button>
           </CardContent>
         </Card>
       ) : filteredPosts.length === 0 ? (

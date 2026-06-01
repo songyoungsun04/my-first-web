@@ -44,7 +44,8 @@ export default function NewPostPage() {
     const { data, error: createError } = await createPost(user.id, values);
 
     if (createError) {
-      setError(createError);
+      console.error("Failed to create post", createError);
+      setError("게시글 작성에 실패했습니다. 잠시 후 다시 시도해주세요.");
       setIsSubmitting(false);
       return;
     }
