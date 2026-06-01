@@ -194,4 +194,33 @@ context.md, todo.md, ARCHITECTURE.md를 업데이트해줘.
 - 화면별 loading/empty/error 상태
 - 폼 검증 규칙
 - 에러 메시지 변환 규칙 (lib/error-message.ts)
+
+---
+
+## 최종 검증 보고서 (2026-06-01)
+
+### 1) 테스트 환경 (local / Vercel)
+
+- Local: Windows (프로젝트: my-first-web)
+   - 실행 URL / 실행 명령: 확인 필요
+- Vercel:
+   - 프로젝트/환경/배포 URL: 확인 필요
+
+### 2) Playwright 테스트 결과
+
+- `npx playwright test` 실행 기록 있음
+   - 상세 리포트/실행 로그: 확인 필요
+
+### 3) 배포 URL 수동 검증 결과
+
+- 배포 URL 접근/기능 확인: 확인 필요
+
+### 4) 아직 확인 필요한 항목
+
+- Supabase CLI 연결 상태 (projects list, api-keys)
+- .env.local 값 재확인 (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY)
+- RLS 우회 테스트 결과 기록 (비로그인 작성/수정/삭제, 타 사용자 수정/삭제)
+- profiles 테이블 RLS 적용 여부
+- profiles 자동 생성(트리거/서버 로직) 존재 여부
+- posts 공개 정책 의도 확인 (SELECT public 여부)
 ```

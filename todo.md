@@ -38,7 +38,10 @@
 - [x] 보안 키 노출 grep (app/lib/components/contexts)
 - [x] 빌드/배포 검증 (npm run build, Vercel URL)
 - [x] Ch12 에러 처리/UX 개선 (error boundary, loading/empty 상태, 폼 검증, 에러 메시지 변환)
+- [x] 최종 검증 보고서 작성
+- [ ] Playwright 테스트 리포트 기록
+- [ ] 배포 URL 수동 검증 결과 기록
 - [ ] 마이페이지
 - [ ] 댓글 기능
 
-## 진행률: 25/32 (78%)
+## 진행률: 26/34 (76%)
