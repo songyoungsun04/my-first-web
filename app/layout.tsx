@@ -44,7 +44,7 @@ export default function RootLayout({
               </div>
             </div>
           </nav>
-          <main className="max-w-4xl mx-auto w-full p-6">{children}</main>
+          <main className="max-w-6xl mx-auto w-full p-6">{children}</main>
           <footer className="border-t border-border py-4 text-center text-sm text-muted-foreground">
             © 2026 내 블로그
           </footer>

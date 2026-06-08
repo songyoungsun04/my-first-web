@@ -15,12 +15,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { getErrorMessage } from "@/lib/error-message";
+import MoleCharacter from "@/components/MoleCharacter";
 
 type SignupForm = {
   name: string;
   email: string;
   password: string;
 };
+
+type FocusField = "email" | "password" | "name" | null;
 
 export default function SignupPage() {
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function SignupPage() {
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [focusField, setFocusField] = useState<FocusField>(null);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,8 +60,20 @@ export default function SignupPage() {
   };
 
   return (
-    <section className="mx-auto max-w-md">
-      <Card className="shadow-sm">
+    <section className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-center lg:gap-16">
+      {/* 두더지 캐릭터 영역 */}
+      <div className="flex flex-col items-center gap-3 lg:order-first">
+        <div className="flex items-end gap-2">
+          <MoleCharacter color="red" focusField={focusField} size={160} />
+          <MoleCharacter color="blue" focusField={focusField} size={120} />
+        </div>
+        <p className="text-sm text-muted-foreground animate-pulse">
+          환영해요! 같이 시작해볼까요? 🎉
+        </p>
+      </div>
+
+      {/* 회원가입 폼 카드 */}
+      <Card className="w-full max-w-md shadow-sm">
         <CardHeader className="px-6 pt-6">
           <CardTitle>회원가입</CardTitle>
           <CardDescription>
@@ -76,6 +92,8 @@ export default function SignupPage() {
                 autoComplete="name"
                 placeholder="이름을 입력하세요"
                 value={form.name}
+                onFocus={() => setFocusField("name")}
+                onBlur={() => setFocusField(null)}
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, name: event.target.value }))
                 }
@@ -91,6 +109,8 @@ export default function SignupPage() {
                 autoComplete="email"
                 placeholder="you@example.com"
                 value={form.email}
+                onFocus={() => setFocusField("email")}
+                onBlur={() => setFocusField(null)}
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, email: event.target.value }))
                 }
@@ -106,6 +126,8 @@ export default function SignupPage() {
                 autoComplete="new-password"
                 placeholder="비밀번호를 입력하세요"
                 value={form.password}
+                onFocus={() => setFocusField("password")}
+                onBlur={() => setFocusField(null)}
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, password: event.target.value }))
                 }
